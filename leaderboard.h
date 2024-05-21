@@ -1,3 +1,8 @@
+#include <conio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 typedef struct Player {
     char nama[100];
     int score;
@@ -55,27 +60,42 @@ void openLeaderboard() {
         return;
     }
 
-    char nama[50];
+    char line[150];
+    char nama[100];
     int score;
 
-    while (fscanf(file, "%49s %d", nama, &score) == 2) {
+    while (fgets(line, sizeof(line), file)) {
+        sscanf(line, "%[^,],%d", nama, &score);
         insertNode(nama, score);
     }
 
     fclose(file);
 }
-
 // Fungsi untuk menulis node ke leaderboard.txt
 void saveLeaderboard() {
     FILE *file = fopen("leaderboard.txt", "w");
     Player *current = head;
 
     while (current != NULL) {
-        fprintf(file, "%s %d\n", current->nama, current->score);
+        fprintf(file, "%s,%d\n", current->nama, current->score);
         current = current->next;
     }
 
     fclose(file);
+}
+
+void printLeaderboard() {
+    printf("\033[0;36m");
+    printf("                                                                                                               \n");
+    printf(" _|        _|_|_|_|    _|_|    _|_|_|    _|_|_|_|  _|_|_|    _|_|_|      _|_|      _|_|    _|_|_|    _|_|_|    \n");
+    printf(" _|        _|        _|    _|  _|    _|  _|        _|    _|  _|    _|  _|    _|  _|    _|  _|    _|  _|    _|  \n");
+    printf(" _|        _|_|_|    _|_|_|_|  _|    _|  _|_|_|    _|_|_|    _|_|_|    _|    _|  _|_|_|_|  _|_|_|    _|    _|  \n");
+    printf(" _|        _|        _|    _|  _|    _|  _|        _|    _|  _|    _|  _|    _|  _|    _|  _|    _|  _|    _|  \n");
+    printf(" _|_|_|_|  _|_|_|_|  _|    _|  _|_|_|    _|_|_|_|  _|    _|  _|_|_|      _|_|    _|    _|  _|    _|  _|_|_|    \n");
+    printf("                                                                                                               \n");
+    printf("                                                                                                               \n");
+    printf("\033[0m");
+    printf("---------------------------------------------------------------------------------------------------------------\n");
 }
 
 // Fungsi untuk menampilkan leaderboard
@@ -94,10 +114,14 @@ void showLeaderboard() {
 
     printLeaderboard();
     printf("%-3s |\t%-20s %s\n", "No", "Username", "Score");
-    while (fscanf(file, "%49s %d", nama, &score) == 2) {
+
+    char line[150];
+    while (fgets(line, sizeof(line), file)) {
+        sscanf(line, "%[^,],%d", nama, &score);
         printf("%-3d |\t%-20s %d\n", i, nama, score);
         i++;
     }
+
     printf("===============================================================================================================\n");
 
     fclose(file);

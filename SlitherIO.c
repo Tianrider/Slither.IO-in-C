@@ -1,97 +1,66 @@
-<<<<<<< HEAD
 /*
     SLITHER.IO IN C
-    Created by:
-    Benedict Aurelius - 2306209095
+
+    Proyek Akhir Pemograman Lanjut - Kelompok 8
+
+    Benedict Aurelius -2306209095
     Christian Hadiwijaya - 2306161952
 
-    PROYEK AKHIR PROGLAN
+    Ini adalah game Slither.io yang dibuat menggunakan bahasa C. Game ini dimainkan di terminal dengan cara melakukan refreshing layar setiap detiknya.
+    Game ini memiliki beberapa fitur, yaitu:
+    - Simpan high score pemain di file
+    - Multiplayer (2 pemain)
+    - Leaderboard untuk pemain dengan score tertinggi
 
     Version 1.0
 */
 
-#include <conio.h>
-=======
+#include "leaderboard.h"
+#include "menu.h"
 #include "onePlayer.h"
+#include "tutorial.h"
 #include "twoPlayer.h"
 #include <conio.h>
 #include <ctype.h>
->>>>>>> tian
 #include <omp.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <windows.h>
-<<<<<<< HEAD
-#include <ctype.h>
-#include "onePlayer.h"
-#include "twoPlayer.h"
-#include "leaderboard.h"
-=======
-// #include "leaderboard.h"
->>>>>>> tian
-#include "menu.h"
 
 int main() {
     int option;
     int score;
-    char nama[50];
+    char nama[100];
 
     do {
-<<<<<<< HEAD
-        option = menu();
-        system("cls");
-        switch(option) {
-            case 1:
-                // Single Player
-                printf("Username: ");
-                scanf("%s", nama);
-                print_wait_3s();
-                score = 0;
-                multi_startSinglePlayer(&score);
-                leaderboard(nama, &score);
-                break;
-            case 2:
-                // Local Multiplayer
-                startTwoPlayer();
-                break;
-            case 3:
-                // Display Leaderboard
-                showLeaderboard();
-                break;
-            case 4:
-                // Exit
-                print_Thankyou();
-                Sleep(1000);
-                break;
-        }
-    } while(option != 4);
-=======
         system("cls");
         option = menu();
         switch (option) {
-        case 1:
-            printf("Username: ");
-            scanf("%s", nama);
+        case 1: // singleplayer
+            printf("\n\n\n\n\n\n\n %+70s", GREEN "Username: " RESET);
+            scanf(" %[^\n]s", nama);
             print_wait_3s();
-            multi_startSinglePlayer();
-            // leaderboard(nama, &score);
+            score = single_startSinglePlayer();
+            leaderboard(nama, &score);
             break;
-        case 2:
-            // multiPlayer();
+        case 2: // two player
+            print_wait_3s();
             startTwoPlayer();
             break;
-        case 3:
-            // showLeaderboard();
+        case 3: // show leaderboard
+            showLeaderboard();
             break;
         case 4:
-            printf("Thank you for playing!\n");
+            showTutorial();
+            break;
+        case 5: // exit game
+            print_Thankyou();
             getch();
             break;
         }
-    } while (option != 4);
->>>>>>> tian
+    } while (option != 5);
 
     return 0;
 }
