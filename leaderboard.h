@@ -84,20 +84,6 @@ void saveLeaderboard() {
     fclose(file);
 }
 
-void printLeaderboard() {
-    printf("\033[0;36m");
-    printf("                                                                                                               \n");
-    printf(" _|        _|_|_|_|    _|_|    _|_|_|    _|_|_|_|  _|_|_|    _|_|_|      _|_|      _|_|    _|_|_|    _|_|_|    \n");
-    printf(" _|        _|        _|    _|  _|    _|  _|        _|    _|  _|    _|  _|    _|  _|    _|  _|    _|  _|    _|  \n");
-    printf(" _|        _|_|_|    _|_|_|_|  _|    _|  _|_|_|    _|_|_|    _|_|_|    _|    _|  _|_|_|_|  _|_|_|    _|    _|  \n");
-    printf(" _|        _|        _|    _|  _|    _|  _|        _|    _|  _|    _|  _|    _|  _|    _|  _|    _|  _|    _|  \n");
-    printf(" _|_|_|_|  _|_|_|_|  _|    _|  _|_|_|    _|_|_|_|  _|    _|  _|_|_|      _|_|    _|    _|  _|    _|  _|_|_|    \n");
-    printf("                                                                                                               \n");
-    printf("                                                                                                               \n");
-    printf("\033[0m");
-    printf("---------------------------------------------------------------------------------------------------------------\n");
-}
-
 // Fungsi untuk menampilkan leaderboard
 void showLeaderboard() {
     FILE *file = fopen("leaderboard.txt", "r");
@@ -112,7 +98,6 @@ void showLeaderboard() {
     char nama[50];
     int score, i = 1;
 
-    printLeaderboard();
     printf("%-3s |\t%-20s %s\n", "No", "Username", "Score");
 
     char line[150];

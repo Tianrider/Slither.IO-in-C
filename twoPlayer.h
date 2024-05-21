@@ -192,7 +192,7 @@ void generateFood(char world[cols][rows]) {
     }
 }
 
-void checkCollision(bool *isGameOver, int *winner, int playerOneScore, int playerTwoScore, Snake *snakeOne, Snake *snakeTwo, char world[cols][rows]) {
+void checkCollision(bool *isGameOver, int *winner, int *playerOneScore, int *playerTwoScore, Snake *snakeOne, Snake *snakeTwo, char world[cols][rows]) {
     if (snakeOne->head->x == 0 || snakeOne->head->x == cols - 1 || snakeOne->head->y == 0 || snakeOne->head->y == rows - 1) {
         *isGameOver = true;
         *winner = 2;
@@ -243,7 +243,7 @@ void checkCollision(bool *isGameOver, int *winner, int playerOneScore, int playe
 
     // check if head meets head, find the highest score
     if (snakeOne->head->x == snakeTwo->head->x && snakeOne->head->y == snakeTwo->head->y) {
-        if (playerOneScore > playerTwoScore) {
+        if (*playerOneScore > *playerTwoScore) {
             *isGameOver = true;
             *winner = 1;
         } else {
@@ -254,13 +254,13 @@ void checkCollision(bool *isGameOver, int *winner, int playerOneScore, int playe
 
     // check food
     if (world[snakeOne->head->x][snakeOne->head->y] == '*') {
-        playerOneScore += 4;
+        *playerOneScore += 4;
         addBody(snakeOne);
         generateFood(world);
     }
 
     if (world[snakeTwo->head->x][snakeTwo->head->y] == '*') {
-        playerTwoScore += 4;
+        *playerTwoScore += 4;
         addBody(snakeTwo);
         generateFood(world);
     }
@@ -268,37 +268,32 @@ void checkCollision(bool *isGameOver, int *winner, int playerOneScore, int playe
 
 void printPlayerOneWin() {
     printf("\033[0;32m");
-
     printf("                                                                                                    \n");
-    printf(" _|_|_|    _|                                                _|      _|          _|  _|            \n");
-    printf(" _|    _|  _|    _|_|_|  _|    _|    _|_|    _|  _|_|      _|_|      _|          _|      _|_|_|    \n");
-    printf(" _|_|_|    _|  _|    _|  _|    _|  _|_|_|_|  _|_|            _|      _|    _|    _|  _|  _|    _|  \n");
-    printf(" _|        _|  _|    _|  _|    _|  _|        _|              _|        _|  _|  _|    _|  _|    _|  \n");
-    printf(" _|        _|    _|_|_|    _|_|_|    _|_|_|  _|              _|          _|  _|      _|  _|    _|  \n");
-    printf("                               _|                                                              \n");
-    printf("                           _|_|                                                               \n");
+    printf(" _|_|_|    _|                                                _|      _|          _|  _|             \n");
+    printf(" _|    _|  _|    _|_|_|  _|    _|    _|_|    _|  _|_|      _|_|      _|          _|      _|_|_|     \n");
+    printf(" _|_|_|    _|  _|    _|  _|    _|  _|_|_|_|  _|_|            _|      _|    _|    _|  _|  _|    _|   \n");
+    printf(" _|        _|  _|    _|  _|    _|  _|        _|              _|        _|  _|  _|    _|  _|    _|   \n");
+    printf(" _|        _|    _|_|_|    _|_|_|    _|_|_|  _|              _|          _|  _|      _|  _|    _|   \n");
+    printf("                               _|                                                                   \n");
+    printf("                           _|_|                                                                     \n");
     printf("\033[0m");
 
-    // press enter to continue
-    printf("Press enter to continue...");
     while (getch() != '\r') {
     }
 }
 
 void printPlayerTwoWin() {
     printf("\033[0;32m");
-
     printf("                                                                                                        \n");
-    printf(" _|_|_|    _|                                                _|_|        _|          _|  _|            \n");
-    printf(" _|    _|  _|    _|_|_|  _|    _|    _|_|    _|  _|_|      _|    _|      _|          _|      _|_|_|    \n");
-    printf(" _|_|_|    _|  _|    _|  _|    _|  _|_|_|_|  _|_|              _|        _|    _|    _|  _|  _|    _|  \n");
-    printf(" _|        _|  _|    _|  _|    _|  _|        _|              _|            _|  _|  _|    _|  _|    _|  \n");
-    printf(" _|        _|    _|_|_|    _|_|_|    _|_|_|  _|            _|_|_|_|          _|  _|      _|  _|    _|  \n");
-    printf("                               _|                                                                  \n");
-    printf("                           _|_|                                                                   \n");
-
+    printf(" _|_|_|    _|                                                _|_|        _|          _|  _|             \n");
+    printf(" _|    _|  _|    _|_|_|  _|    _|    _|_|    _|  _|_|      _|    _|      _|          _|      _|_|_|     \n");
+    printf(" _|_|_|    _|  _|    _|  _|    _|  _|_|_|_|  _|_|              _|        _|    _|    _|  _|  _|    _|   \n");
+    printf(" _|        _|  _|    _|  _|    _|  _|        _|              _|            _|  _|  _|    _|  _|    _|   \n");
+    printf(" _|        _|    _|_|_|    _|_|_|    _|_|_|  _|            _|_|_|_|          _|  _|      _|  _|    _|   \n");
+    printf("                               _|                                                                       \n");
+    printf("                           _|_|                                                                         \n");
     printf("\033[0m");
-    printf("Press enter to continue...");
+
     while (getch() != '\r') {
     }
 }
@@ -395,7 +390,7 @@ void startTwoPlayer() {
         fillSnake(world, &snakeOne, &snakeTwo);
         printWorld(playerOneScore, playerTwoScore, world);
         readKeyOne(&lastKeyOne, &lastKeyTwo, &snakeOne, &snakeTwo);
-        checkCollision(&isGameOver, &winner, playerOneScore, playerTwoScore, &snakeOne, &snakeTwo, world);
+        checkCollision(&isGameOver, &winner, &playerOneScore, &playerTwoScore, &snakeOne, &snakeTwo, world);
         Sleep(300);
         system("cls");
     }

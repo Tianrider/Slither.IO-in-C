@@ -7,7 +7,9 @@
 
 void print_title();
 void print_gameOver();
+void printLeaderboard();
 void print_wait_3s();
+void print_Thankyou();
 
 int menu() {
     char code;
@@ -91,6 +93,20 @@ void print_gameOver() {
 
     while (getch() != '\r') {
     }
+}
+
+void printLeaderboard() {
+    printf("\033[0;36m");
+    printf("                                                                                                               \n");
+    printf(" _|        _|_|_|_|    _|_|    _|_|_|    _|_|_|_|  _|_|_|    _|_|_|      _|_|      _|_|    _|_|_|    _|_|_|    \n");
+    printf(" _|        _|        _|    _|  _|    _|  _|        _|    _|  _|    _|  _|    _|  _|    _|  _|    _|  _|    _|  \n");
+    printf(" _|        _|_|_|    _|_|_|_|  _|    _|  _|_|_|    _|_|_|    _|_|_|    _|    _|  _|_|_|_|  _|_|_|    _|    _|  \n");
+    printf(" _|        _|        _|    _|  _|    _|  _|        _|    _|  _|    _|  _|    _|  _|    _|  _|    _|  _|    _|  \n");
+    printf(" _|_|_|_|  _|_|_|_|  _|    _|  _|_|_|    _|_|_|_|  _|    _|  _|_|_|      _|_|    _|    _|  _|    _|  _|_|_|    \n");
+    printf("                                                                                                               \n");
+    printf("                                                                                                               \n");
+    printf("\033[0m");
+    printf("---------------------------------------------------------------------------------------------------------------\n");
 }
 
 void print_wait_3s() {

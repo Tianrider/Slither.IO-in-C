@@ -123,7 +123,6 @@ void showTutorial() {
         } else {
             printf("            Single Player                         "
                    "\033[0;32m"
-                   "O"
                    "Multiplayer"
                    "\033[0m"
                    "        \n");

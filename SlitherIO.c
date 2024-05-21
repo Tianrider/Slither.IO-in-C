@@ -43,6 +43,7 @@ int main() {
             scanf(" %[^\n]s", nama);
             print_wait_3s();
             score = single_startSinglePlayer();
+            print_gameOver();
             leaderboard(nama, &score);
             break;
         case 2: // two player
@@ -50,6 +51,7 @@ int main() {
             startTwoPlayer();
             break;
         case 3: // show leaderboard
+            printLeaderboard();
             showLeaderboard();
             break;
         case 4:
@@ -57,7 +59,7 @@ int main() {
             break;
         case 5: // exit game
             print_Thankyou();
-            getch();
+            Sleep(1000);
             break;
         }
     } while (option != 5);

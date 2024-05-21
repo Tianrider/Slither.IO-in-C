@@ -1,3 +1,2 @@
 Tian,5762384
-Benedict Aurelius,16
-Christian Hadiwijaya,16
+Ben,100000
