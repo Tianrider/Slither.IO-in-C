@@ -1,3 +1,11 @@
+#include <conio.h>
+#include <omp.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <windows.h>
+
 #define multi_rows 20
 #define multi_cols 20
 
@@ -20,15 +28,16 @@ struct multi_Snake {
     multi_SnakeBody *tail;
 };
 
+int single_score = 0;
 int multi_snakeX = 5;
 int multi_snakeY = 5;
 bool multi_isGameOver = false;
 
 struct multi_Snake multi_Snake;
 
-void multi_printWorld(int *score) {
+void multi_printWorld() {
     int i;
-    printf("Score: %d\n", *score);
+    printf("Score: %d\n", single_score);
     for (i = 0; i < multi_rows; i++) {
         for (int j = 0; j < multi_rows; j++) {
             if (multi_world[i][j] == 'o') {
@@ -145,8 +154,7 @@ void multi_generateFood() {
     }
 }
 
-
-void multi_gameRules(int *score) {
+void multi_gameRules() {
 #pragma omp parallel
     {
 #pragma omp single
@@ -178,7 +186,7 @@ void multi_gameRules(int *score) {
                 if (multi_world[multi_Snake.head->y][multi_Snake.head->x] == '*') {
                     multi_addBody();
                     multi_generateFood();
-                    (*score) = (*score) + 4;
+                    single_score += 4;
                 }
             }
 #pragma omp taskwait
@@ -186,7 +194,8 @@ void multi_gameRules(int *score) {
     }
 }
 
-void multi_startSinglePlayer(int *score) {
+void multi_startSinglePlayer() {
+    single_score = 0;
     multi_isGameOver = false;
     multi_Snake.length = 0;
     multi_Snake.head = (multi_SnakeBody *)malloc(sizeof(multi_SnakeBody) * 100);
@@ -207,9 +216,11 @@ void multi_startSinglePlayer(int *score) {
         system("cls");
         multi_fillWorld();
         multi_fillSnake();
-        multi_printWorld(score);
+        multi_printWorld();
         multi_readKey();
-        multi_gameRules(score);
-        Sleep(300);
+        multi_gameRules();
+        Sleep(250);
     }
+
+    // implement file handling here for score /leaderboard
 }

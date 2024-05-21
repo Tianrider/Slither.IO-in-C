@@ -1,3 +1,11 @@
+#include <conio.h>
+#include <omp.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <windows.h>
+
 #define rows 20
 #define cols 40
 
@@ -29,7 +37,7 @@ int playerTwoScore = 0;
 
 void printWorld() {
     int i;
-    printf("%-10s: %-5d %-10s: %-5d\n", "Player 1 Score", playerOneScore, "Player 2 Score", playerTwoScore);
+    printf("Player 1 Score: %-10d Player 2 Score: %d\n", playerOneScore, playerTwoScore);
     for (i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
             if (world[j][i] == 'o') {
@@ -235,6 +243,42 @@ void checkCollision() {
     }
 }
 
+void printPlayerOneWin() {
+    printf("\033[0;32m");
+
+    printf("                                                                                                    \n");
+    printf(" _|_|_|    _|                                                _|      _|          _|  _|            \n");
+    printf(" _|    _|  _|    _|_|_|  _|    _|    _|_|    _|  _|_|      _|_|      _|          _|      _|_|_|    \n");
+    printf(" _|_|_|    _|  _|    _|  _|    _|  _|_|_|_|  _|_|            _|      _|    _|    _|  _|  _|    _|  \n");
+    printf(" _|        _|  _|    _|  _|    _|  _|        _|              _|        _|  _|  _|    _|  _|    _|  \n");
+    printf(" _|        _|    _|_|_|    _|_|_|    _|_|_|  _|              _|          _|  _|      _|  _|    _|  \n");
+    printf("                               _|                                                              \n");
+    printf("                           _|_|                                                               \n");
+    printf("\033[0m");
+
+    // press enter to continue
+    printf("Press enter to continue...");
+    while (getch() != '\r') {
+    }
+}
+
+void printPlayerTwoWin() {
+    printf("\033[0;32m");
+
+    printf("                                                                                                        \n");
+    printf(" _|_|_|    _|                                                _|_|        _|          _|  _|            \n");
+    printf(" _|    _|  _|    _|_|_|  _|    _|    _|_|    _|  _|_|      _|    _|      _|          _|      _|_|_|    \n");
+    printf(" _|_|_|    _|  _|    _|  _|    _|  _|_|_|_|  _|_|              _|        _|    _|    _|  _|  _|    _|  \n");
+    printf(" _|        _|  _|    _|  _|    _|  _|        _|              _|            _|  _|  _|    _|  _|    _|  \n");
+    printf(" _|        _|    _|_|_|    _|_|_|    _|_|_|  _|            _|_|_|_|          _|  _|      _|  _|    _|  \n");
+    printf("                               _|                                                                  \n");
+    printf("                           _|_|                                                                   \n");
+
+    printf("\033[0m");
+    printf("Press enter to continue...");
+    while (getch() != '\r') {
+    }
+}
 void startTwoPlayer() {
     isGameOver = false;
     playerOneScore = 0;
