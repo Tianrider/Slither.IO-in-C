@@ -6,6 +6,7 @@ typedef struct Player {
 
 Player *head = NULL, *tail = NULL;
 
+// Fungsi untuk menambahkan node baru ke linked list
 void insertNode(char *nama, int score) {
     Player *newPlayer = (Player *)malloc(sizeof(Player));
     strcpy(newPlayer->nama, nama);
@@ -20,6 +21,7 @@ void insertNode(char *nama, int score) {
     }
 }
 
+// Fungsi untuk mengurutkan linked list berdasarkan score dan nama
 void sortLeaderboard() {
     Player *current, *index;
     char tempNama[50];
@@ -45,6 +47,7 @@ void sortLeaderboard() {
     }
 }
 
+// Fungsi untuk membuka leaderboard.txt dan memasukkan data ke linked list
 void openLeaderboard() {
     FILE *file = fopen("leaderboard.txt", "r");
 
@@ -62,6 +65,7 @@ void openLeaderboard() {
     fclose(file);
 }
 
+// Fungsi untuk menulis node ke leaderboard.txt
 void saveLeaderboard() {
     FILE *file = fopen("leaderboard.txt", "w");
     Player *current = head;
@@ -74,6 +78,7 @@ void saveLeaderboard() {
     fclose(file);
 }
 
+// Fungsi untuk menampilkan leaderboard
 void showLeaderboard() {
     FILE *file = fopen("leaderboard.txt", "r");
 
@@ -99,6 +104,7 @@ void showLeaderboard() {
     getch();
 }
 
+// Fungsi untuk mengupdate leaderboard setiap kali game selesai (Singleplayer)
 void leaderboard(char *nama, int *score) {
     Player *current = head;
     while (current != NULL) {
