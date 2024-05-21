@@ -3,7 +3,7 @@
 Welcome to our GitHub repository for **Slither.IO in C**! This project is a simple yet engaging game developed in C by Benedict Aurelius (2306209095) and Christian Hadiwijaya (2306161952).
 
 ## Introduction
-Slither.IO in C is a project that recreates the popular Slither.io game with three main features: Singleplayer Mode, Multiplayer Mode, and a Leaderboard for the Singleplayer Mode. The game is designed to be simple, addictive, and fun, offering a competitive experience for players.
+**Slither.IO in C** is a project that recreates the popular Slither.io game with three main features: Singleplayer Mode, Multiplayer Mode, and a Leaderboard for the Singleplayer Mode. The game is designed to be simple, addictive, and fun, offering a competitive experience for players.
 
 ## Features
 - **Singleplayer Mode**: Play solo and collect as much food as possible to grow larger.
