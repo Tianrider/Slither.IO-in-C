@@ -1,4 +1,3 @@
-#include <conio.h>
 #include <omp.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -6,80 +5,86 @@
 #include <time.h>
 #include <windows.h>
 
-#define multi_rows 20
-#define multi_cols 20
+#define single_rows 20
+#define single_cols 20
 
 #define GREEN "\033[0;32m"
 #define RED "\033[0;31m"
 #define RESET "\033[0m"
 
-char multi_world[multi_cols][multi_rows];
-char multi_lastKey;
-
-typedef struct multi_SnakeBody {
+typedef struct single_SnakeBody {
     int x;
     int y;
-    struct multi_SnakeBody *next;
-} multi_SnakeBody;
+    struct single_SnakeBody *next;
+} single_SnakeBody;
 
-struct multi_Snake {
+typedef struct single_Snake {
     int length;
-    multi_SnakeBody *head;
-    multi_SnakeBody *tail;
-};
+    single_SnakeBody *head;
+    single_SnakeBody *tail;
+} single_Snake;
 
-int single_score = 0;
-int multi_snakeX = 5;
-int multi_snakeY = 5;
-bool multi_isGameOver = false;
-
-struct multi_Snake multi_Snake;
-
-void multi_printWorld() {
+void single_printWorld(char single_world[single_cols][single_rows], int single_score) {
     int i;
     printf("Score: %d\n", single_score);
-    for (i = 0; i < multi_rows; i++) {
-        for (int j = 0; j < multi_rows; j++) {
-            if (multi_world[i][j] == 'o') {
-                printf("%s%c%s", GREEN, multi_world[i][j], RESET);
-            } else if (multi_world[i][j] == '*') {
-                printf("%s%c%s", RED, multi_world[i][j], RESET);
+    for (i = 0; i < single_rows; i++) {
+        for (int j = 0; j < single_cols; j++) {
+            if (single_world[i][j] == 'o') {
+                printf("%s%c%s", GREEN, single_world[i][j], RESET);
+            } else if (single_world[i][j] == '*') {
+                printf("%s%c%s", RED, single_world[i][j], RESET);
             } else {
-                printf("%c", multi_world[i][j]);
+                printf("%c", single_world[i][j]);
             }
         }
         printf("\n");
     }
 }
 
-void multi_fillWorld() {
-    for (int i = 0; i < multi_rows; i++) {
-        for (int j = 0; j < multi_rows; j++) {
-            if (i == 0 || i == multi_rows - 1 || j == 0 || j == multi_rows - 1) {
-                multi_world[i][j] = '#';
-            } else if (!(multi_world[i][j] == '*')) {
-                multi_world[i][j] = ' ';
+void single_printWorldOver(char single_world[single_cols][single_rows], int single_score) {
+    printf("Score: %d\n", single_score);
+    for (int i = 0; i < single_rows; i++) {
+        for (int j = 0; j < single_cols; j++) {
+            if (single_world[i][j] == 'o') {
+                printf("%s%c%s", RED, single_world[i][j], RESET);
+            } else if (single_world[i][j] == '*') {
+                printf("%s%c%s", RED, single_world[i][j], RESET);
+            } else {
+                printf("%c", single_world[i][j]);
+            }
+        }
+        printf("\n");
+    }
+}
+
+void single_fillWorld(char single_world[single_cols][single_rows]) {
+    for (int i = 0; i < single_rows; i++) {
+        for (int j = 0; j < single_cols; j++) {
+            if (i == 0 || i == single_rows - 1 || j == 0 || j == single_cols - 1) {
+                single_world[i][j] = '#';
+            } else if (single_world[i][j] != '*') {
+                single_world[i][j] = ' ';
             }
         }
     }
 }
 
-void multi_fillSnake() {
-    multi_SnakeBody *current = multi_Snake.head;
+void single_fillSnake(char single_world[single_cols][single_rows], single_Snake *snake) {
+    single_SnakeBody *current = snake->head;
     while (current != NULL) {
-        multi_world[current->y][current->x] = 'o';
+        single_world[current->y][current->x] = 'o';
         current = current->next;
     }
 }
 
-void multi_moveSnake(int x, int y) {
-    int tempX = multi_Snake.head->x;
-    int tempY = multi_Snake.head->y;
+void single_moveSnake(single_Snake *snake, int x, int y) {
+    int tempX = snake->head->x;
+    int tempY = snake->head->y;
 
-    multi_Snake.head->x += x;
-    multi_Snake.head->y += y;
+    snake->head->x += x;
+    snake->head->y += y;
 
-    multi_SnakeBody *current = multi_Snake.head->next;
+    single_SnakeBody *current = snake->head->next;
     while (current != NULL) {
         int temp = current->x;
         current->x = tempX;
@@ -93,97 +98,67 @@ void multi_moveSnake(int x, int y) {
     }
 }
 
-void multi_readKey() {
-    char key;
-
-    if (kbhit()) {
-        key = getch();
-    } else {
-        key = multi_lastKey;
-    }
-
-    multi_lastKey = key;
-
-    switch (multi_lastKey) {
-    case 'w':
-        multi_moveSnake(0, -1);
-        break;
-    case 's':
-        multi_moveSnake(0, 1);
-        break;
-    case 'a':
-        multi_moveSnake(-1, 0);
-        break;
-    case 'd':
-        multi_moveSnake(1, 0);
-        break;
-    default:
-        break;
+void single_readKey(char *lastKey) {
+    if (_kbhit()) {
+        *lastKey = _getch();
     }
 }
 
-void multi_addBody() {
-    multi_SnakeBody *newBody = (multi_SnakeBody *)malloc(sizeof(multi_SnakeBody));
-    newBody->x = multi_Snake.tail->x; // Place new segment at the tail's position
-    newBody->y = multi_Snake.tail->y;
-    newBody->next = NULL; // New body is the new tail, so next is NULL
+void single_addBody(single_Snake *snake) {
+    single_SnakeBody *newBody = (single_SnakeBody *)malloc(sizeof(single_SnakeBody));
+    newBody->x = snake->tail->x;
+    newBody->y = snake->tail->y;
+    newBody->next = NULL;
 
-    multi_Snake.tail->next = newBody; // Link the current tail to the new body
-    multi_Snake.tail = newBody;       // Update the tail to the new body
-    multi_Snake.length++;
+    snake->tail->next = newBody;
+    snake->tail = newBody;
+    snake->length++;
 }
 
-void multi_generateFood() {
+void single_generateFood(char single_world[single_cols][single_rows]) {
     int x, y;
 
-    x = rand() % (multi_rows - 2) + 1;
-    y = rand() % (multi_cols - 2) + 1;
+    do {
+        x = rand() % (single_rows - 2) + 1;
+        y = rand() % (single_cols - 2) + 1;
+    } while (single_world[y][x] != ' ');
 
-    if (multi_world[y][x] == ' ') {
-        {
-            multi_world[y][x] = '*';
-        }
-    } else {
-        multi_generateFood();
-    }
+    single_world[y][x] = '*';
 }
 
-void multi_generateBigFood() {
-    // size of food is 2x2, avoid spawning at the edge of the map
-    int x, y;
-
-    x = rand() % (multi_rows - 3) + 1;
-    y = rand() % (multi_cols - 3) + 1;
-
-    if (multi_world[y][x] == ' ' && multi_world[y][x + 1] == ' ' && multi_world[y + 1][x] == ' ' && multi_world[y + 1][x + 1] == ' ') {
-        multi_world[y][x] = '@';
-        multi_world[y][x + 1] = '@';
-        multi_world[y + 1][x] = '@';
-        multi_world[y + 1][x + 1] = '@';
-    } else {
-        multi_generateBigFood();
+void gameOverEffect(char single_world[single_cols][single_rows], int single_score) {
+    for (int i = 0; i < 5; i++) {
+        system("cls");
+        single_printWorldOver(single_world, single_score);
+        Sleep(250);
+        system("cls");
+        single_printWorld(single_world, single_score);
+        Sleep(250);
     }
+
+    system("cls");
 }
-void multi_gameRules() {
+
+void single_gameRules(char single_world[single_cols][single_rows], single_Snake *snake, int *score, bool *isGameOver) {
 #pragma omp parallel
     {
 #pragma omp single
         {
 #pragma omp task
             {
-                if (multi_Snake.head->x == 0 || multi_Snake.head->x == multi_rows - 1 || multi_Snake.head->y == 0 || multi_Snake.head->y == multi_cols - 1) {
-                    printf("Game Over\n");
-                    multi_isGameOver = true;
+                if (snake->head->x == 0 || snake->head->x == single_rows - 1 || snake->head->y == 0 || snake->head->y == single_cols - 1) {
+                    gameOverEffect(single_world, *score);
+                    *isGameOver = true;
                 }
             }
 
 #pragma omp critical
             {
-                multi_SnakeBody *current = multi_Snake.head->next;
+                single_SnakeBody *current = snake->head->next;
                 while (current != NULL) {
-                    if (multi_Snake.head->x == current->x && multi_Snake.head->y == current->y) {
-                        printf("Game Over\n");
-                        multi_isGameOver = true;
+                    if (snake->head->x == current->x && snake->head->y == current->y) {
+                        gameOverEffect(single_world, *score);
+                        *isGameOver = true;
                     }
                     current = current->next;
                 }
@@ -191,10 +166,10 @@ void multi_gameRules() {
 
 #pragma omp task
             {
-                if (multi_world[multi_Snake.head->y][multi_Snake.head->x] == '*') {
-                    multi_addBody();
-                    multi_generateFood();
-                    single_score += 4;
+                if (single_world[snake->head->y][snake->head->x] == '*') {
+                    single_addBody(snake);
+                    single_generateFood(single_world);
+                    *score += 4;
                 }
             }
 #pragma omp taskwait
@@ -202,34 +177,80 @@ void multi_gameRules() {
     }
 }
 
-void multi_startSinglePlayer() {
-    single_score = 0;
-    multi_isGameOver = false;
-    bigFoodCount = 0;
-    multi_Snake.length = 0;
-    multi_Snake.head = (multi_SnakeBody *)malloc(sizeof(multi_SnakeBody) * 100);
-    multi_Snake.head->x = multi_snakeX;
-    multi_Snake.head->y = multi_snakeY;
-    multi_Snake.head->next = NULL;
-    multi_Snake.tail = multi_Snake.head;
+void clearGame(single_Snake *snake, char single_world[single_cols][single_rows]) {
+    single_SnakeBody *current = snake->head;
+    single_SnakeBody *temp;
 
-    multi_lastKey = 'd';
+    while (current != NULL) {
+        temp = current;
+        current = current->next;
+        free(temp);
+    }
+
+    snake->length = 0;
+    snake->head = NULL;
+    snake->tail = NULL;
+
+    for (int i = 0; i < single_rows; i++) {
+        for (int j = 0; j < single_cols; j++) {
+            single_world[i][j] = ' ';
+        }
+    }
+}
+
+int single_startSinglePlayer() {
+    char single_world[single_cols][single_rows];
+    int single_score = 0;
+    bool single_isGameOver = false;
+    single_Snake single_Snake;
+    int single_snakeX = 5;
+    int single_snakeY = 5;
+    char single_lastKey = 'd';
+
+    single_fillWorld(single_world);
+    single_score = 0;
+    single_isGameOver = false;
+    single_Snake.length = 1; // Initialize length to 1
+    single_Snake.head = (single_SnakeBody *)malloc(sizeof(single_SnakeBody));
+    single_Snake.head->x = single_snakeX;
+    single_Snake.head->y = single_snakeY;
+    single_Snake.head->next = NULL;
+    single_Snake.tail = single_Snake.head;
 
     srand(time(NULL));
 
-    multi_addBody();
-    multi_fillWorld();
-    multi_generateFood();
+    single_addBody(&single_Snake);
+    single_fillWorld(single_world);
+    single_generateFood(single_world);
 
-    while (!multi_isGameOver) {
+    while (!single_isGameOver) {
         system("cls");
-        multi_fillWorld();
-        multi_fillSnake();
-        multi_printWorld();
-        multi_readKey();
-        multi_gameRules();
+        single_fillWorld(single_world);
+        single_fillSnake(single_world, &single_Snake);
+        single_printWorld(single_world, single_score);
+        single_readKey(&single_lastKey);
+
+        int dx = 0, dy = 0;
+        if (single_lastKey == 'w') {
+            dx = 0;
+            dy = -1;
+        } else if (single_lastKey == 's') {
+            dx = 0;
+            dy = 1;
+        } else if (single_lastKey == 'a') {
+            dx = -1;
+            dy = 0;
+        } else if (single_lastKey == 'd') {
+            dx = 1;
+            dy = 0;
+        }
+
+        single_moveSnake(&single_Snake, dx, dy);
+        single_gameRules(single_world, &single_Snake, &single_score, &single_isGameOver);
         Sleep(250);
     }
 
-    // implement file handling here for score /leaderboard
+    clearGame(&single_Snake, single_world);
+
+    return single_score;
 }
