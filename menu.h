@@ -22,7 +22,11 @@ int menu() {
 
         strcpy(select[input], "-->");
         for (i = 0; i < 4; i++) {
-            printf("  %s %s\n", select[i], option[i]);
+            if (strcasecmp(select[i], "-->") == 0) {
+                printf(GREEN "  %s %s\n" RESET, select[i], option[i]);
+            } else {
+                printf("  %s %s\n", select[i], option[i]);
+            }
         }
         code = tolower(getch());
 

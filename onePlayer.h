@@ -29,7 +29,6 @@ struct multi_Snake {
 };
 
 int single_score = 0;
-
 int multi_snakeX = 5;
 int multi_snakeY = 5;
 bool multi_isGameOver = false;
@@ -149,6 +148,22 @@ void multi_generateFood() {
     }
 }
 
+void multi_generateBigFood() {
+    // size of food is 2x2, avoid spawning at the edge of the map
+    int x, y;
+
+    x = rand() % (multi_rows - 3) + 1;
+    y = rand() % (multi_cols - 3) + 1;
+
+    if (multi_world[y][x] == ' ' && multi_world[y][x + 1] == ' ' && multi_world[y + 1][x] == ' ' && multi_world[y + 1][x + 1] == ' ') {
+        multi_world[y][x] = '@';
+        multi_world[y][x + 1] = '@';
+        multi_world[y + 1][x] = '@';
+        multi_world[y + 1][x + 1] = '@';
+    } else {
+        multi_generateBigFood();
+    }
+}
 void multi_gameRules() {
 #pragma omp parallel
     {
@@ -189,6 +204,8 @@ void multi_gameRules() {
 
 void multi_startSinglePlayer() {
     single_score = 0;
+    multi_isGameOver = false;
+    bigFoodCount = 0;
     multi_Snake.length = 0;
     multi_Snake.head = (multi_SnakeBody *)malloc(sizeof(multi_SnakeBody) * 100);
     multi_Snake.head->x = multi_snakeX;
