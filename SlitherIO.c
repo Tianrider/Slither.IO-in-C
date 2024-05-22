@@ -40,6 +40,7 @@ int main() {
         option = menu();
         switch (option) {
         case 1: // singleplayer
+            input = 0;
             printf("\n\n\n\n\n\n\n %s", GREEN "Username: " RESET);
             scanf(" %[^\n]s", nama);
 

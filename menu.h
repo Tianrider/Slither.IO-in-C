@@ -11,6 +11,7 @@ void printLeaderboard();
 void print_wait_3s();
 void print_Thankyou();
 
+// Fungsi untuk menampilkan menu, w untuk keatas, s untuk kebawah, enter untuk memilih
 int menu() {
     char code;
     int input = 0;
@@ -66,6 +67,7 @@ int menu() {
     return input + 1;
 }
 
+// konfirmasi untuk menggunakan username yang sama, 0 jika setuju, 1 jika tidak
 int confirmSameUser(char nama[]) {
     char code;
     int input = 0;
