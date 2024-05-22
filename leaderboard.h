@@ -9,27 +9,43 @@ typedef struct Player {
     struct Player *next;
 } Player;
 
-Player *head = NULL, *tail = NULL;
-
-// Fungsi untuk menambahkan node baru ke linked list
-void insertNode(char *nama, int score) {
+// Function to add a new node to the linked list
+void insertNode(Player **head, Player **tail, char *nama, int score) {
     Player *newPlayer = (Player *)malloc(sizeof(Player));
+    if (newPlayer == NULL) {
+        printf("Memory allocation failed!\n");
+        exit(1);
+    }
     strcpy(newPlayer->nama, nama);
     newPlayer->score = score;
     newPlayer->next = NULL;
 
-    if (head == NULL) {
-        head = tail = newPlayer;
+    // check for duplicate username
+    if (*head != NULL) {
+        Player *current = *head;
+        while (current != NULL) {
+            if (strcasecmp(current->nama, nama) == 0) {
+                if (current->score < score) {
+                    current->score = score;
+                }
+                return;
+            }
+            current = current->next;
+        }
+    }
+
+    if (*head == NULL) {
+        *head = *tail = newPlayer;
     } else {
-        tail->next = newPlayer;
-        tail = newPlayer;
+        (*tail)->next = newPlayer;
+        *tail = newPlayer;
     }
 }
 
-// Fungsi untuk mengurutkan linked list berdasarkan score dan nama
-void sortLeaderboard() {
+// Function to sort the linked list by score and name
+void sortLeaderboard(Player *head) {
     Player *current, *index;
-    char tempNama[50];
+    char tempNama[100];
     int tempScore;
 
     if (head == NULL) {
@@ -52,8 +68,8 @@ void sortLeaderboard() {
     }
 }
 
-// Fungsi untuk membuka leaderboard.txt dan memasukkan data ke linked list
-void openLeaderboard() {
+// Function to open leaderboard.txt and insert data into the linked list
+void openLeaderboard(Player **head, Player **tail) {
     FILE *file = fopen("leaderboard.txt", "r");
 
     if (file == NULL) {
@@ -66,13 +82,14 @@ void openLeaderboard() {
 
     while (fgets(line, sizeof(line), file)) {
         sscanf(line, "%[^,],%d", nama, &score);
-        insertNode(nama, score);
+        insertNode(head, tail, nama, score);
     }
 
     fclose(file);
 }
-// Fungsi untuk menulis node ke leaderboard.txt
-void saveLeaderboard() {
+
+// Function to write nodes to leaderboard.txt
+void saveLeaderboard(Player *head) {
     FILE *file = fopen("leaderboard.txt", "w");
     Player *current = head;
 
@@ -84,7 +101,7 @@ void saveLeaderboard() {
     fclose(file);
 }
 
-// Fungsi untuk menampilkan leaderboard
+// Function to display the leaderboard
 void showLeaderboard() {
     FILE *file = fopen("leaderboard.txt", "r");
 
@@ -95,7 +112,7 @@ void showLeaderboard() {
         return;
     }
 
-    char nama[50];
+    char nama[100];
     int score, i = 1;
 
     printf("%-3s |\t%-20s %s\n", "No", "Username", "Score");
@@ -113,19 +130,44 @@ void showLeaderboard() {
     getch();
 }
 
-// Fungsi untuk mengupdate leaderboard setiap kali game selesai (Singleplayer)
+// check for existing user
+int checkUser(char *nama) {
+    FILE *file = fopen("leaderboard.txt", "r");
+
+    if (file == NULL) {
+        return 0;
+    }
+
+    char line[150];
+    char username[100];
+    int score;
+
+    while (fgets(line, sizeof(line), file)) {
+        sscanf(line, "%[^,],%d", username, &score);
+        if (strcasecmp(username, nama) == 0) {
+            fclose(file);
+            return 1;
+        }
+    }
+
+    fclose(file);
+    return 0;
+}
+
+// Function to update the leaderboard after each game (Singleplayer)
 void leaderboard(char *nama, int *score) {
+    Player *head = NULL, *tail = NULL;
+
+    openLeaderboard(&head, &tail);
+    insertNode(&head, &tail, nama, *score);
+    sortLeaderboard(head);
+    saveLeaderboard(head);
+
+    // Cleanup linked list
     Player *current = head;
     while (current != NULL) {
         Player *temp = current;
         current = current->next;
         free(temp);
     }
-
-    head = tail = NULL;
-
-    openLeaderboard();
-    insertNode(nama, *score);
-    sortLeaderboard();
-    saveLeaderboard();
 }

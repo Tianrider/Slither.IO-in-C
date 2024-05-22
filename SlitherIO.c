@@ -12,7 +12,7 @@
     - Multiplayer (2 pemain)
     - Leaderboard untuk pemain dengan score tertinggi
 
-    Version 1.0
+    Version 1.1
 */
 
 #include "leaderboard.h"
@@ -33,18 +33,27 @@ int main() {
     int option;
     int score;
     char nama[100];
+    int input;
 
     do {
         system("cls");
         option = menu();
         switch (option) {
         case 1: // singleplayer
-            printf("\n\n\n\n\n\n\n %+70s", GREEN "Username: " RESET);
+            printf("\n\n\n\n\n\n\n %s", GREEN "Username: " RESET);
             scanf(" %[^\n]s", nama);
-            print_wait_3s();
-            score = single_startSinglePlayer();
-            print_gameOver();
-            leaderboard(nama, &score);
+
+            if (checkUser(nama)) {
+                input = confirmSameUser(nama); // cek nama duplikat, 0 jika setuju menggunakan user yang sama, 1 jika tidak
+            }
+
+            if (input == 0) { // start game
+                print_wait_3s();
+                score = single_startSinglePlayer(); // return score akhir dari permainan
+                print_gameOver(nama, score);
+                leaderboard(nama, &score); // cetak score ke file
+            }
+
             break;
         case 2: // two player
             print_wait_3s();

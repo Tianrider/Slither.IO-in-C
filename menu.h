@@ -66,6 +66,56 @@ int menu() {
     return input + 1;
 }
 
+int confirmSameUser(char nama[]) {
+    char code;
+    int input = 0;
+    do {
+        system("cls");
+        printf("\n\n\n\n\n\n Username %s Sudah Ada! Apakah Anda ingin bermain dengan username ini? (hanya nilai tertinggi yang akan disimpan)\n", nama);
+
+        char select[2][3];
+        for (int i = 0; i < 2; i++) {
+            strcpy(select[i], "");
+        }
+
+        char option[2][20];
+        strcpy(option[0], "Ya");
+        strcpy(option[1], "Tidak");
+
+        strcpy(select[input], "-->");
+        for (int i = 0; i < 2; i++) {
+            if (strcasecmp(select[i], "-->") == 0) {
+                printf("\033[0;32m"
+                       "  %s %s\n"
+                       "\033[0;0m",
+                       select[i], option[i]);
+            } else {
+                printf("  %s %s\n", select[i], option[i]);
+            }
+        }
+
+        code = tolower(getch());
+
+        switch (code) {
+        case 'w':
+            input--;
+            if (input == -1) {
+                input = 1;
+            }
+            break;
+        case 's':
+            input++;
+            if (input == 2) {
+                input = 0;
+            }
+            break;
+        }
+        system("cls");
+    } while (code != '\r');
+
+    return input;
+}
+
 void print_title() {
     printf("\033[0;34m");
     printf("                                                                                                                                          \n");
@@ -79,7 +129,7 @@ void print_title() {
     printf("\033[0m");
 }
 
-void print_gameOver() {
+void print_gameOver(char nama[], int score) {
     printf("\033[0;31m");
     printf("                                                                                         \n");
     printf("   _|_|_|    _|_|    _|      _|  _|_|_|_|        _|_|    _|      _|  _|_|_|_|  _|_|_|    \n");
@@ -90,6 +140,9 @@ void print_gameOver() {
     printf("                                                                                         \n");
     printf("                                                                                         \n");
     printf("\033[0m");
+
+    printf("%s\n", nama);
+    printf("Score: %d\n", score);
 
     while (getch() != '\r') {
     }
