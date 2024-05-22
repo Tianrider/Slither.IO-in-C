@@ -1,4 +1,3 @@
 Tian,5762384
 Ben,100000
 edgrant,12
-taly,4
