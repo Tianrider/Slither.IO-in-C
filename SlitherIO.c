@@ -15,11 +15,11 @@
     Version 1.1
 */
 
-#include "leaderboard.h"
-#include "menu.h"
-#include "onePlayer.h"
-#include "tutorial.h"
-#include "twoPlayer.h"
+#include "./headers/leaderboard.h"
+#include "./headers/menu.h"
+#include "./headers/onePlayer.h"
+#include "./headers/tutorial.h"
+#include "./headers/twoPlayer.h"
 #include <conio.h>
 #include <ctype.h>
 #include <omp.h>
