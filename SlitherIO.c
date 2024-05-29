@@ -12,7 +12,10 @@
     - Multiplayer (2 pemain)
     - Leaderboard untuk pemain dengan score tertinggi
 
-    Version 1.1
+    UPDATE REVISI:
+    - Leaderboard sekarang menyimpan jumlah game yang sudah dimainkan oleh pemain.
+
+    Version 2.0
 */
 
 #include "./headers/leaderboard.h"

@@ -6,11 +6,12 @@
 typedef struct Player {
     char nama[100];
     int score;
+    int gameCount;
     struct Player *next;
 } Player;
 
 // Function to add a new node to the linked list
-void insertNode(Player **head, Player **tail, char *nama, int score) {
+void insertNode(Player **head, Player **tail, char *nama, int score, int gameCount) {
     Player *newPlayer = (Player *)malloc(sizeof(Player));
     if (newPlayer == NULL) {
         printf("Memory allocation failed!\n");
@@ -18,21 +19,8 @@ void insertNode(Player **head, Player **tail, char *nama, int score) {
     }
     strcpy(newPlayer->nama, nama);
     newPlayer->score = score;
+    newPlayer->gameCount = gameCount;
     newPlayer->next = NULL;
-
-    // check for duplicate username
-    if (*head != NULL) {
-        Player *current = *head;
-        while (current != NULL) {
-            if (strcasecmp(current->nama, nama) == 0) {
-                if (current->score < score) {
-                    current->score = score;
-                }
-                return;
-            }
-            current = current->next;
-        }
-    }
 
     if (*head == NULL) {
         *head = *tail = newPlayer;
@@ -79,10 +67,11 @@ void openLeaderboard(Player **head, Player **tail) {
     char line[150];
     char nama[100];
     int score;
+    int gameCount;
 
     while (fgets(line, sizeof(line), file)) {
-        sscanf(line, "%[^,],%d", nama, &score);
-        insertNode(head, tail, nama, score);
+        sscanf(line, "%[^,],%d,%d", nama, &score, &gameCount);
+        insertNode(head, tail, nama, score, gameCount);
     }
 
     fclose(file);
@@ -94,7 +83,7 @@ void saveLeaderboard(Player *head) {
     Player *current = head;
 
     while (current != NULL) {
-        fprintf(file, "%s,%d\n", current->nama, current->score);
+        fprintf(file, "%s,%d,%d\n", current->nama, current->score, current->gameCount);
         current = current->next;
     }
 
@@ -113,14 +102,14 @@ void showLeaderboard() {
     }
 
     char nama[100];
-    int score, i = 1;
+    int score, i = 1, gameCount;
 
-    printf("%-3s |\t%-20s %s\n", "No", "Username", "Score");
+    printf("%-3s |\t%-20s %-5s %s\n", "No", "Username", "Score", "Count");
 
     char line[150];
     while (fgets(line, sizeof(line), file)) {
-        sscanf(line, "%[^,],%d", nama, &score);
-        printf("%-3d |\t%-20s %d\n", i, nama, score);
+        sscanf(line, "%[^,],%d, %d", nama, &score, &gameCount);
+        printf("%-3d |\t%-20s %-5d %d\n", i, nama, score, gameCount);
         i++;
     }
 
@@ -158,13 +147,29 @@ int checkUser(char *nama) {
 void leaderboard(char *nama, int *score) {
     Player *head = NULL, *tail = NULL;
 
+    int returningPlayer = 0;
+
     openLeaderboard(&head, &tail);
-    insertNode(&head, &tail, nama, *score);
+    Player *current = head;
+    while (current != NULL) {
+        if (strcasecmp(current->nama, nama) == 0) {
+            current->score = *score;
+            current->gameCount++;
+            returningPlayer = 1;
+            break;
+        }
+        current = current->next;
+    }
+
+    if (returningPlayer == 0) {
+        insertNode(&head, &tail, nama, *score, 1);
+    }
+
     sortLeaderboard(head);
     saveLeaderboard(head);
 
     // Cleanup linked list
-    Player *current = head;
+    current = head;
     while (current != NULL) {
         Player *temp = current;
         current = current->next;
