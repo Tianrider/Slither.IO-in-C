@@ -104,12 +104,12 @@ void showLeaderboard() {
     char nama[100];
     int score, i = 1, gameCount;
 
-    printf("%-3s |\t%-20s %-5s %s\n", "No", "Username", "Score", "Count");
+    printf("%-3s |\t%-20s %-10s %-10s\n", "No", "Username", "Score", "Count");
 
     char line[150];
     while (fgets(line, sizeof(line), file)) {
         sscanf(line, "%[^,],%d, %d", nama, &score, &gameCount);
-        printf("%-3d |\t%-20s %-5d %d\n", i, nama, score, gameCount);
+        printf("%-3d |\t%-20s %-10d %-10d\n", i, nama, score, gameCount);
         i++;
     }
 
